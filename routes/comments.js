@@ -3,9 +3,9 @@ const router = express.Router();
 //const {emailSchema} = require('../controllers/messagecontroller');
 const { createComment, getAllComments, getComment, deleteComment } = require('../controllers/commentscontroller');
 const {protect} = require ('../middleware/authMiddleware');
-router.get('/', protect, getAllComments);
+router.get('/', getAllComments);
 
-router.post('/', protect, createComment);
+router.post('/', createComment);
 
 router.get('/:commentId' , protect, getComment );
 

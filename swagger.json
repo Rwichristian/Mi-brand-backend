@@ -8,10 +8,15 @@
       "email": "rwigemapeterchristian@gmail.com"
     }
   },
-  "host": "localhost:3000",
+  "host": "app-endpoints.herokuapp.com",
   "basePath": "/",
   "schemes": [
-    "http"
+    "https"
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
   ],
   "paths": {
     "/posts": {
@@ -29,7 +34,8 @@
           "405": {
             "description": "Invalid input"
           }
-        }
+        },
+        "security": []
       }
     },
     "/posts/": {
@@ -188,7 +194,8 @@
           "405": {
             "description": "Invalid input"
           }
-        }
+        },
+        "security": []
       }
     },
     "/comments/": {
@@ -232,7 +239,8 @@
           "405": {
             "description": "Invalid input"
           }
-        }
+        },
+        "security": []
       }
     },
     "/comments/{id}": {
@@ -313,7 +321,8 @@
           "405": {
             "description": "Invalid input"
           }
-        }
+        },
+        "security": []
       }
     },
     "/messages/": {
@@ -364,7 +373,8 @@
           "405": {
             "description": "Invalid input"
           }
-        }
+        },
+        "security": []
       }
     },
     "/messages/{id}": {
@@ -472,7 +482,8 @@
           "405": {
             "description": "Invalid input"
           }
-        }
+        },
+        "security": []
       }
     },
     "/user/login": {
@@ -517,7 +528,8 @@
           "405": {
             "description": "Invalid input"
           }
-        }
+        },
+        "security": []
       }
     }
   },
@@ -581,6 +593,13 @@
           "type": "string"
         }
       }
+    }
+  },
+  "securityDefinitions": {
+    "bearerAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization"
     }
   }
 }

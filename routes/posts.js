@@ -8,7 +8,7 @@ router.get('/', getAllPosts);
 
 router.post('/', protect,createPost);
 
-router.get('/:postId' , protect,  getPost );
+router.get('/:postId' , getPost );
 
 router.put('/like/:postId' , protect, handlelike);
 
