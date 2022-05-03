@@ -4,9 +4,9 @@ const { getAllPosts, createPost, getPost, deletePost, updatePost, handlelike } =
 
 const {protect} = require('../middleware/authMiddleware')
 
-router.get('/', protect, getAllPosts);
+router.get('/', getAllPosts);
 
-router.post('/', protect, createPost);
+router.post('/', protect,createPost);
 
 router.get('/:postId' , protect,  getPost );
 
