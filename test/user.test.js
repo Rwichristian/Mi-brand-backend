@@ -32,11 +32,11 @@ describe('Testing Auth routes', () => {
 		const res = await chai.request(app).post('/user').send(tester);
 		expect(res.status).to.be.equal(201);
 		expect(res.body).to.be.a('object');
-	});
+	}).timeout(30000);
 	it('should login user.', async () => {
         const user = await chai.request(app).post('/user').send(tester);
 		const res = await chai.request(app).post('/user/login').send({email:tester.email,name:tester.name,password:tester.password});
 		expect(res.status).to.be.equal(200);
 		expect(res.body).to.be.a('object');
-	});
+	}).timeout(30000);
 });

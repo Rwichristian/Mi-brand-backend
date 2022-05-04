@@ -1,74 +1,84 @@
-// let chai = require('chai');
-// let chaiHttp = require('chai-http');
-// //let { response } = require('express');
-// let server = require('../app');
+const mocha =require( 'mocha');
+const chai=require( 'chai');
+const { expect } =require( 'chai');
+const chaiHttp =require( 'chai-http');
+// const Sinon = require('sinon');
+const path = require('path')
+const app =require( '../app');
+const Article =require( '../models/Post');
+// const cloudinary = require('../src/config/cloudinary');
 
-// const { it,describe } = require('mocha');
-// const { expect } = require('chai');
-// const tester = {
-// 	email: 'admin@gmail.com',
-// 	password: '123456',
-// 	name: 'James'
-// };
+const { it, describe, before, after } = mocha;
 
-// chai.should();
+const testingData={
+    title:'testing article title',
+    description:'testing article content',
+}
+const testingDataUpdate={
+    title:'testing article title update',
+    description:'testing article content update',
+}
 
-// chai.use(chaiHttp);
+const admin={
+    email:'jullls@gmail.com',
+    password:'jullls',
+    name:'jullls'
+}
 
-// describe ('models', () =>{
+chai.expect();
+chai.use(chaiHttp);
 
+describe('Testing Blog routes', () => {
 
-//     describe("get/models/Post", () => 
-//     {
-// // get all post
-//         it("it should get all the posts", async() =>
-//          {
-//             const result = await chai.request(server).get("/posts/")
-//             console.log(result);
-//             expect(result.status).to.be.equal(200)
-//             expect(result.body).to.be.a("array")
-//         }).timeout(30000);
+    before(async () => {
 
-//         // get comment by id
-//         it("it should get comment by id", async() =>
-//          {
-//             const result = await chai.request(server).get("/comments/:commentId")
-//             console.log(result);
-//             expect(result.status).to.be.equal(200)
-//             expect(result.body).to.be.a("object")
-//       }).timeout(30000);
+		await Article.deleteMany();
+	})
 
-
-
-//         // post a message
-//         it("it should post a message", async() =>
-//         {
-//             const post = {
-//                 name: 'fred',
-//                 email: 'fred@gmail.com',
-//                 subject : 'help',
-//                 message : 'thank you'
-//             };
-//            const result = await chai.request(server).post("/messages/").send(post)
-//            console.log(result);
-//            expect(result.status).to.be.equal(200)
-//            expect(result.body).to.be.a("object")
-//       }).timeout(30000);
-
-
-// 	it('should signup a user.', async () => {
-// 		const res = await chai.request(server).post('/user').send(tester);
-//         // console.log(res.body)
-// 		expect(res.status).to.be.equal(201);
-// 		expect(res.body).to.be.a('object');
-// 	}).timeout(30000);
-
-//                // delete an article
-//                it("it should delete an article", async() =>
-//                {
-//                   const result = await chai.request(server).delete("/posts/:postId")
-//                   console.log(result);
-//                   expect(result.status).to.be.equal(200)
-//               }).timeout(30000);              
-//     });
-// });
+    after(async () => {
+		await Article.deleteMany();
+	});
+    it('should create new blog post.',async()=>{
+        const adminSignin=await chai.request(app).post('/user/login').send(admin)
+        const token = `Bearer ${adminSignin.body.token}`;
+        const res=await chai.request(app).post('/posts/').send(testingData).set('Authorization', token)
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.a('object')
+    }),
+    it('should get all blog articles.',async()=>{
+        const res=await chai.request(app).get('/posts/')
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.a('array')
+    }),
+    it('should get one blog article by id',async()=>{
+        const adminSignin=await chai.request(app).post('/user/login').send(admin)
+        const token = `Bearer ${adminSignin.body.token}`;
+        const res1=await chai.request(app).post('/posts').send(testingData).set('Authorization', token)
+        const article=await chai.request(app).get('/posts/')
+        const id=article.body[0]._id
+        const res=await chai.request(app).get(`/posts/${id}`)
+        expect(res.status).to.be.equal(200)
+        expect(res.body).to.be.a('object')
+    }),
+    it('should update blog article',async()=>{
+        const adminSignin=await chai.request(app).post('/user/login').send(admin)
+        const token = `Bearer ${adminSignin.body.token}`;
+        const res1=await chai.request(app).post('/posts').send(testingData).set('Authorization', token)
+        const article=await chai.request(app).get('/posts/')
+        const id=article.body[0]._id
+        const res=await chai.request(app).patch(`/posts/${id}`).send(testingDataUpdate).set('Authorization', token)
+        expect(res.status).to.be.equal(200)
+        expect(res.body).to.be.a('object')
+    }),
+    it('should delete blog article',async()=>{
+        const adminSignin=await chai.request(app).post('/user/login').send(admin)
+        const token = `Bearer ${adminSignin.body.token}`;
+        const res1=await chai.request(app).post('/posts').send(testingData).set('Authorization', token)
+        const article=await chai.request(app).get('/posts/')
+        const id=article.body[0]._id
+        const res=await chai.request(app).delete(`/posts/${id}`).set('Authorization', token)
+        expect(res.status).to.be.equal(200)
+        expect(res.body).to.be.a('object')
+    })
+   
+})
