@@ -1,0 +1,23 @@
+version: 2.1
+jobs:
+  run_tests:
+    docker:
+      - image: circle/node:10
+    steps:
+      - checkout
+      - run:
+          name: install npm dependencies
+          command:
+             npm install
+      - run:
+          name: run unit tests
+          command:
+          ./node_modules/mocha/bin/mocha test/   --reporter nyc  --reporter-options reportDir= test-results, reportFilename= test-results
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: test-results
+workflows:
+  build_test:
+    jobs:
+      - run_tests                              
