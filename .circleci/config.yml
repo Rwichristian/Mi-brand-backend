@@ -2,7 +2,7 @@
 version: 2.1
 jobs:
   run_tests:
-    docker:
+    window:
       - image: circle/node:10
     steps:
       - checkout
